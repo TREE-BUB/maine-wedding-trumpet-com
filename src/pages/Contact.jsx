@@ -1,65 +1,12 @@
 import { useState } from 'react'
-
-const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY
+import { useForm, ValidationError } from '@formspree/react'
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [errors, setErrors] = useState({})
-  const [sent, setSent] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [networkError, setNetworkError] = useState(false)
+  const [state, handleSubmit] = useForm('xvznrgqd')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
 
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
-
-  const validate = () => {
-    const er = {}
-    if (!form.name.trim()) er.name = 'Please tell me your name.'
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) er.email = 'Enter a valid email.'
-    if (form.message.trim().length < 8) er.message = 'A sentence or two helps.'
-    return er
-  }
-
-  const submit = async (e) => {
-    e.preventDefault()
-    const er = validate()
-    setErrors(er)
-    if (Object.keys(er).length > 0) return
-
-    setSubmitting(true)
-    setNetworkError(false)
-
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `New lesson inquiry from ${form.name}`,
-          from_name: form.name,
-          email: form.email,
-          message: form.message,
-          botcheck: '',
-        }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setSent(true)
-      } else {
-        setNetworkError(true)
-      }
-    } catch {
-      setNetworkError(true)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const reset = () => {
-    setSent(false)
-    setForm({ name: '', email: '', message: '' })
-    setErrors({})
-    setNetworkError(false)
-  }
+  const reset = () => window.location.reload()
 
   return (
     <div className="page">
@@ -101,60 +48,50 @@ export default function Contact() {
 
             {/* Right column — form */}
             <div className="card" style={{ padding: 'clamp(28px, 4vw, 44px)' }}>
-              {sent ? (
+              {state.succeeded ? (
                 <div style={{ textAlign: 'center', padding: '40px 10px' }}>
                   <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'color-mix(in srgb, var(--accent) 16%, transparent)', color: 'var(--accent-deep)', display: 'grid', placeItems: 'center', margin: '0 auto', fontSize: '1.8rem' }}>✓</div>
-                  <h3 style={{ fontSize: '1.5rem', marginTop: 22 }}>Thank you, {form.name.split(' ')[0]}!</h3>
+                  <h3 style={{ fontSize: '1.5rem', marginTop: 22 }}>Thank you, {name.split(' ')[0]}!</h3>
                   <p style={{ color: 'var(--muted)', marginTop: 12, lineHeight: 1.6, maxWidth: '40ch', marginLeft: 'auto', marginRight: 'auto' }}>
-                    Your message is on its way. I'll reply to <b style={{ color: 'var(--ink)' }}>{form.email}</b> soon to get your trial lesson scheduled.
+                    Your message is on its way. I'll reply to <b style={{ color: 'var(--ink)' }}>{email}</b> soon to get your trial lesson scheduled.
                   </p>
                   <button className="btn btn-ghost" style={{ marginTop: 28 }} onClick={reset}>
                     Send another
                   </button>
                 </div>
               ) : (
-                <form onSubmit={submit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
-                  {/* Honeypot */}
-                  <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex="-1" autoComplete="off" />
-
-                  <div className={'field' + (errors.name ? ' err' : '')}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+                  <div className={'field' + (state.errors?.find(e => e.field === 'name') ? ' err' : '')}>
                     <label htmlFor="c-name">Your name</label>
-                    <input id="c-name" value={form.name} onChange={set('name')} placeholder="Jane Cornet" />
-                    <span className="msg">{errors.name}</span>
+                    <input id="c-name" name="name" value={name} onChange={e => setName(e.target.value)} placeholder="Jane Cornet" />
+                    <ValidationError field="name" prefix="Name" errors={state.errors} className="msg" />
                   </div>
 
-                  <div className={'field' + (errors.email ? ' err' : '')}>
+                  <div className={'field' + (state.errors?.find(e => e.field === 'email') ? ' err' : '')}>
                     <label htmlFor="c-email">Email</label>
-                    <input id="c-email" type="email" value={form.email} onChange={set('email')} placeholder="jane@email.com" />
-                    <span className="msg">{errors.email}</span>
+                    <input id="c-email" type="email" name="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@email.com" />
+                    <ValidationError field="email" prefix="Email" errors={state.errors} className="msg" />
                   </div>
 
-                  <div className={'field' + (errors.message ? ' err' : '')}>
+                  <div className={'field' + (state.errors?.find(e => e.field === 'message') ? ' err' : '')}>
                     <label htmlFor="c-msg">Message</label>
                     <textarea
                       id="c-msg"
+                      name="message"
                       rows="5"
-                      value={form.message}
-                      onChange={set('message')}
                       placeholder="A bit about you — your experience, goals, and when you'd like to start."
                       style={{ resize: 'vertical' }}
                     />
-                    <span className="msg">{errors.message}</span>
+                    <ValidationError field="message" prefix="Message" errors={state.errors} className="msg" />
                   </div>
-
-                  {networkError && (
-                    <p style={{ fontSize: '0.88rem', color: '#c0392b', textAlign: 'center' }}>
-                      Something went wrong — please try again or email <a href="mailto:hello@mainetrumpetlessons.com" style={{ color: 'inherit', textDecoration: 'underline' }}>hello@mainetrumpetlessons.com</a> directly.
-                    </p>
-                  )}
 
                   <button
                     type="submit"
                     className="btn btn-accent btn-lg"
                     style={{ width: '100%' }}
-                    disabled={submitting}
+                    disabled={state.submitting}
                   >
-                    {submitting ? 'Sending…' : 'Send message'}
+                    {state.submitting ? 'Sending…' : 'Send message'}
                   </button>
 
                   <p style={{ fontFamily: 'var(--mono)', fontSize: '0.72rem', color: 'var(--muted)', textAlign: 'center', letterSpacing: '0.04em' }}>

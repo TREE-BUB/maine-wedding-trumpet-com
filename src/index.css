@@ -347,6 +347,7 @@ p { margin: 0; }
   .section-sm { padding: 48px 0; }
 
   .nav-links .nav-link { display: none; }
+  .nav-cta-desktop { display: none; }
   .nav-hamburger { display: flex; }
 
   .hero-split,

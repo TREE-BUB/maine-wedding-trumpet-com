@@ -39,7 +39,7 @@ export default function Nav() {
             </a>
           ))}
           <button
-            className="btn btn-accent nav-cta"
+            className="btn btn-accent nav-cta nav-cta-desktop"
             onClick={() => go('/contact')}
           >
             CONTACT
@@ -67,7 +67,7 @@ export default function Nav() {
               {p.label}
             </a>
           ))}
-          <a className="mobile-link" onClick={() => go('/contact')}>Contact</a>
+          <button className="btn btn-accent" style={{ margin: '6px 22px 10px', width: 'calc(100% - 44px)' }} onClick={() => go('/contact')}>CONTACT</button>
         </div>
       )}
     </nav>
