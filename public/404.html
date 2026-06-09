@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <script>
-    // Redirect unknown paths back to index.html, encoding the path so React Router can restore it
-    var path = window.location.pathname + window.location.search;
-    var hash = window.location.hash;
-    sessionStorage.setItem('redirect', path + hash);
-    window.location.replace('/');
+    // Redirect unknown paths back to index.html, preserving the intended path.
+    // Derives the base (e.g. /maine-trumpet-lessons-com/) from the first path segment
+    // so this works without hardcoding the repo name.
+    sessionStorage.setItem('redirect', window.location.pathname + window.location.search + window.location.hash);
+    var base = '/' + window.location.pathname.split('/')[1] + '/';
+    window.location.replace(base);
   </script>
 </head>
 <body></body>
