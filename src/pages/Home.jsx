@@ -1,5 +1,40 @@
 import { useNavigate } from 'react-router-dom'
 import CTABand from '../components/CTABand'
+import SEO from '../components/SEO'
+
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Maine Trumpet Lessons',
+  description: 'Private, in-person trumpet lessons for all ages and levels in Deering Center, Portland, Maine.',
+  url: 'https://mainetrumpetlessons.com',
+  image: 'https://mainetrumpetlessons.com/jimi-trumpet.jpg',
+  telephone: null,
+  email: 'hello@mainetrumpetlessons.com',
+  priceRange: '$40–$70',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Portland',
+    addressRegion: 'ME',
+    addressCountry: 'US',
+    neighborhood: 'Deering Center',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 43.6713,
+    longitude: -70.2965,
+  },
+  sameAs: [],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Trumpet Lessons',
+    itemListElement: [
+      { '@type': 'Offer', name: '30-minute trumpet lesson', price: '40', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: '45-minute trumpet lesson', price: '55', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: '60-minute trumpet lesson', price: '70', priceCurrency: 'USD' },
+    ],
+  },
+}
 
 const TESTIMONIALS = [
   {
@@ -35,6 +70,11 @@ export default function Home() {
 
   return (
     <div className="page">
+      <SEO
+        description="Private, in-person trumpet lessons for all ages and levels in Deering Center, Portland, Maine. Over two decades of teaching experience."
+        path="/"
+        jsonLd={JSON_LD}
+      />
       {/* Hero */}
       <section style={{ padding: 'clamp(56px, 8vw, 104px) 0 72px' }}>
         <div className="wrap">

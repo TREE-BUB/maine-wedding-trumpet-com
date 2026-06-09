@@ -1,3 +1,4 @@
+import SEO from '../components/SEO'
 import { useNavigate } from 'react-router-dom'
 import CTABand from '../components/CTABand'
 
@@ -13,6 +14,7 @@ export default function Pricing() {
 
   return (
     <div className="page">
+      <SEO title="Pricing" description="Trumpet lesson rates in Portland, Maine: 30-minute lessons $40, 45-minute $55, 60-minute $70. Need-based discounts available. Prices never raised on existing students." path="/pricing" />
       <section className="section-sm" style={{ paddingTop: 72 }}>
         <div className="wrap" style={{ maxWidth: 820 }}>
           <div className="eyebrow eyebrow-lg">Pricing</div>
