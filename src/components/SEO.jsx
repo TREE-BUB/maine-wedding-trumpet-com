@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_NAME = 'Maine Trumpet Lessons'
-const BASE_URL = 'https://mainetrumpetlessons.com'
+const SITE_NAME = 'Maine Wedding Trumpet'
+const BASE_URL = 'https://maineweddingtrumpet.com'
 const DEFAULT_IMAGE = `${BASE_URL}/jimi-trumpet.jpg`
 
 export default function SEO({ title, description, path = '', jsonLd }) {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Private Trumpet Lessons in Portland, Maine`
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Live Trumpet for Weddings & Events in Portland, Maine`
   const url = `${BASE_URL}${path}`
 
   return (

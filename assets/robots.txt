@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mainetrumpetlessons.com/sitemap.xml
+Sitemap: https://maineweddingtrumpet.com/sitemap.xml
